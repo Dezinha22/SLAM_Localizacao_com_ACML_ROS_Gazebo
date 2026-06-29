@@ -204,3 +204,94 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
       ros@docker-desktop:/ws$ ls /ws/*.bag
     /ws/2026-06-16-00-36-58-001.bag
+
+## Execução
+
+O processo de execução é composto por três pilares principais:
+
+A) Obtenção dos dados;
+
+B) Aplicação do Filtro de Kalman; 
+
+C) Análise do Filtro de Kalman. 
+
+Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de avaliação do filtro de Kalman e a aplicação do filtro de Kalman estejam ativos. 
+
+Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. Portanto, recomendo utilizar o terminator e realize o processo a seguir:
+
+25 - Utilize o comando *cd* para acessar a pasta clonada do Github do LaR UFBA e, dentro da pasta, execute o comando *docker compose exec lar_gazebo bash* para acessar o mesmo container criado. Para melhor entendimento dessa etapa, iremos chamar esse primeiro terminal de terminal Alpha. A saida deve ser similar a essa:
+
+    (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~$ cd ~/lar_gazebo
+    (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~/lar_gazebo$ docker compose exec lar_gazebo bash
+    ros@docker-desktop:/ws$ 
+
+26 - No terminal Alpha, recomendo executar o comando *roscore* para garantir a execução do ROS. A saida deverá ser semelhante a essa:
+
+    (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~/lar_gazebo$ docker compose exec lar_gazebo bash
+    ros@docker-desktop:/ws$ roscore
+    ... logging to /home/ros/.ros/log/83ab5690-7045-11f1-b278-525400123456/roslaunch-docker-desktop-487.log
+    Checking log directory for disk usage. This may take a while.
+    Press Ctrl-C to interrupt
+    Done checking log file disk usage. Usage is <1GB.
+
+    started roslaunch server http://docker-desktop:58241/
+    ros_comm version 1.17.4
+
+
+    SUMMARY
+    ========
+
+    PARAMETERS
+     * /rosdistro: noetic
+     * /rosversion: 1.17.4
+
+    NODES
+
+    auto-starting new master
+    process[master]: started with pid [495]
+    ROS_MASTER_URI=http://docker-desktop:11311/
+
+    setting /run_id to 83ab5690-7045-11f1-b278-525400123456
+    process[rosout-1]: started with pid [505]
+    started core service [/rosout]
+
+27 - Mantenha o terminal Alpha ativo e, em um sengundo terminal, execute os mesmos passos do item 25. Esse novo terminal chamaremos de terminal Bravo.
+
+28 - No terminal Bravo iremos ativar o avaliador do filtro de Kalman, ele será responsável por coletar os dados gerados pelo pacote ROS (onde estão localizadas as diferentes versões do filtro de Kalman) e compará-lo com o referencial (graund truth). Para isso, exeute o comando *roslaunch husky_Kalmanan_fusion evaluate.launch*. A saída do comando deverá ser semelhante a:
+
+    ros@docker-desktop:/ws$ roslaunch husky_Kalmanan_fusion evaluate.launch
+    ... logging to /home/ros/.ros/log/83ab5690-7045-11f1-b278-525400123456/roslaunch-docker-desktop-512.log
+    Checking log directory for disk usage. This may take a while.
+    Press Ctrl-C to interrupt
+    Done checking log file disk usage. Usage is <1GB.
+
+    started roslaunch server http://docker-desktop:59439/
+
+    SUMMARY
+    ========
+
+    PARAMETERS
+     * /rosdistro: noetic
+     * /rosversion: 1.17.4
+
+    NODES
+      /
+        evaluate_localization (husky_Kalmanan_fusion/evaluate_localization.py)
+
+    ROS_MASTER_URI=http://localhost:11311
+
+    process[evaluate_localization-1]: started with pid [526]    
+    [INFO] [1782358272.596614]: Nó de avaliação iniciado. Aguardando dados...
+
+29 - Mantenha os terminais Alpha e Bravo ativos e abra o terminal Charle. Ele será responsavél pela execução do filtro de Kalman. Para isso, repita o processo do item 25 e em seguida execute um dos comandos abaixo:
+
+ * Para executar o filtro somente com odometria: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_only.launch*;
+   
+ * Para executar o filtro com dados da odometria e IMU: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_imu.launch*;
+   
+ * Para executar o filtro com dados da odometria, IMU e GPS: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_imu_gps.launch*
+
+30 - Agora, continue com os terminais Alpha, Bravo e Charle ativos e abra o terminal Delta. Ele será responsável por rodar a Bag. Para isso, repita o processo do item 25 e em seguida execute o comando *rosbag play /ws/2026-06-16-00-36-58-001.bag --clock*. 
+
+31 - Após finalizar a execução da bag, aguarde ao menos um minuto e encerre o processo no terminal Bravo. Depois, execute o comando similar a *docker cp lar_gazebo_noetic:/home/ros/.ros/results/20260625_035150 ~/Desktop/resultados_odom_only* em um outro terminal que chamaremos de terminal Echo. O terminal Echo será responsável por transferir os arquivos gerados pelo avalidor (20260625_035150) para o desktop da maquina local. Quanto aos testes subsequentes, só é necessário modificar o nome da pasta que gostaria de nomear e ajustar o nome da pasta de origem dos dados, com objetivo de selecionar os arquivos corretos (ex: modificar 20260625_035150 pelo endereço atualizado gerado no terminal Bravo).
+
