@@ -18,7 +18,7 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
 4 - Faça a transferência dos dados de simulação contidos no [google drive](https://drive.google.com/drive/folders/1lF4HExtL49w9botrIfjxp7nfLHgtEdTF?usp=drive_link).
 
-5 - Faça a transferência do pacote com os [arquivos de launch ](https://github.com/Dezinha22/Fus-o_Sensorial-Filtro_Kalmanan_ROS/blob/main/%20Filtro%20de%20Kalmanan_Matheus_27_Jun_26.tar.gz) contido neste repositório.
+5 - Faça a transferência do pacote com os [arquivos de launch ](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo) contido neste repositório.
 
 ### Primeiros Passos 
 
@@ -112,7 +112,7 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
         Filter, search, and stream logs from all your Compose services
         in one place with Docker Desktop's Logs view. docker-desktop://dashboard/logs?appId=lar_gazebo
 
-14 - Caso apresente a mensagem de erro *! Image l... pull access denied for lar-gazebo, repository does not exist or may require 'docker login' 31.1s*. Não se assuste, isso costuma ser decorrente do fato do repositório não ter sido localizada na busca. Esse fato não altera o sucesso do pipiline, uma vez que ele será executado com os arquivos locais (obtidos após clonar o repositório do github).
+14 - Caso apresente a mensagem de erro *! Image l... pull access denied for lar-gazebo, repository does not exist or may require 'docker login' 31.1s*. Não se assuste, isso costuma ser decorrente do fato do repositório não ter sido localizada na busca. Esse fato não altera o sucesso do pipeline, uma vez que ele será executado com os arquivos locais (obtidos após clonar o repositório do github).
 
 15 - Utilize o comando *docker compose ps* para validar a criação do ambiente. A saída deve ser similar a esposta seguir:
 
