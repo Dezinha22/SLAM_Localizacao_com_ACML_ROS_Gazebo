@@ -114,7 +114,7 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
 14 - Caso apresente a mensagem de erro *! Image l... pull access denied for lar-gazebo, repository does not exist or may require 'docker login' 31.1s*. Não se assuste, isso costuma ser decorrente do fato do repositório não ter sido localizada na busca. Esse fato não altera o sucesso do pipeline, uma vez que ele será executado com os arquivos locais (obtidos após clonar o repositório do github).
 
-15 - Utilize o comando *docker compose ps* para validar a criação do ambiente. A saída deve ser similar a esposta seguir:
+15 - Utilize o comando *docker compose ps* para validar a criação do ambiente. A saída deve ser similar a exposta seguir:
 
     (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~/lar_gazebo$ docker compose ps
     NAME                IMAGE               COMMAND                  SERVICE      CREATED          STATUS          PORTS
