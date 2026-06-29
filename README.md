@@ -7,7 +7,7 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 # Fusao_Sensorial-Filtro_Kalman_ROS
 Repositório com as etapas e os arquivos necessários para a aplicação do filtro Kalman.
 
-A base de dados principal é obtida a partir do input de dados provenientes do ambiente simulado do [LaR - UFBA](https://github.com/lar-deeufba/lar_gazebo) e o clearpath husky.
+A base de dados principal é obtida a partir do input de dados provenientes do ambiente simulado do [LaR - UFBA](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo) e o clearpath husky.
 
 ## Configuração de Start-up
 
