@@ -2,12 +2,7 @@
 
 Repositório com as etapas e os arquivos necessários para a aplicação do ACML com os algoritmos gmapping e hector_slam.
 
-A base de dados principal é obtida a partir do input de dados provenientes do ambiente simulado do LaR - UFBA, clearpath husky e sensor LiDAR 2D.
-
-# Fusao_Sensorial-Filtro_Kalman_ROS
-Repositório com as etapas e os arquivos necessários para a aplicação do filtro Kalman.
-
-A base de dados principal é obtida a partir do input de dados provenientes do ambiente simulado do [LaR - UFBA](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo) e o clearpath husky.
+A base de dados principal é obtida a partir do input de dados provenientes do ambiente simulado do [LaR - UFBA](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo),o clearpath husky e o sensor LiDAR 2D
 
 ## Configuração de Start-up
 
@@ -219,10 +214,12 @@ Para o processo em tela, é imprescindível que os dados sejam lidos quando o pr
 
 Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. Portanto, recomendo utilizar o terminator e realize o processo a seguir:
 
-25 - Utilize o comando *cd* para acessar a pasta clonada do Github do LaR UFBA e, dentro da pasta, execute o comando *docker compose exec lar_gazebo bash* para acessar o mesmo container criado. Para melhor entendimento dessa etapa, iremos chamar esse primeiro terminal de terminal Alpha. A saida deve ser similar a essa:
+25 - Utilize o comando *cd* para acessar a pasta clonada do Github do LaR UFBA e, dentro da pasta, execute o comando *docker compose exec lar_gazebo bash* para acessar o mesmo container criado. Seguido pelo comando source devel/setup.bash. Para melhor entendimento dessa etapa, iremos chamar esse primeiro terminal de terminal Alpha. A saida deve ser similar a essa:
 
     (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~$ cd ~/lar_gazebo
     (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~/lar_gazebo$ docker compose exec lar_gazebo bash
+    ros@docker-desktop:/ws$ 
+    ros@docker-desktop:/ws$ source devel/setup.bash
     ros@docker-desktop:/ws$ 
 
 26 - No terminal Alpha, recomendo executar o comando *roscore* para garantir a execução do ROS. A saida deverá ser semelhante a essa:
