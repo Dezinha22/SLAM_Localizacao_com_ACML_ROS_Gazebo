@@ -204,11 +204,11 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
 O processo de execução é composto por três pilares principais:
 
-A) Obtenção dos dados;
+A) Execução do arquivo launch correspondente para geração do mapa de acordo com algoritmo selecionado (ex: Hecktor_Slam ou Gmapping);
 
-B) Aplicação do Filtro de Kalman; 
+B) Execução da bag com os dados da simulação; 
 
-C) Análise do Filtro de Kalman. 
+C) Salvar o mapa e os demais dados oriundos da execução do arquivo launch em conjunto com a bag. 
 
 Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de avaliação do filtro de Kalman e a aplicação do filtro de Kalman estejam ativos. 
 
