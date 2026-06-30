@@ -214,7 +214,7 @@ B) Execução da bag com os dados da simulação;
 
 C) Execução do script para salvar o mapa e os demais dados oriundos da execução do arquivo launch em conjunto com a bag. 
 
-Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de construção do mapa. Além disso, uma vez finalizada a execução da BAG, deve ser feita a execução do comando para salvar os mapas e demais informações oriundas do processamento finalizado. 
+Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de construção do mapa esteja ativo. Além disso, uma vez finalizada a execução da Bag, deve ser feita a execução do comando para salvar os mapas e demais informações oriundas do processamento finalizado. 
 
 Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. Portanto, recomendo utilizar o terminator e realize o processo a seguir:
 
@@ -256,9 +256,9 @@ Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. 
     process[rosout-1]: started with pid [505]
     started core service [/rosout]
 
-27 - Mantenha o terminal Alpha ativo e, em um sengundo terminal, execute os mesmos passos do item 25. Esse novo terminal chamaremos de terminal Bravo.
+27 - Mantenha o terminal Alpha ativo e, em um segundo terminal, execute os mesmos passos do item 25. Esse novo terminal chamaremos de terminal Bravo.
 
-28 - No terminal Bravo iremos ativar o avaliador do filtro de Kalman, ele será responsável por coletar os dados gerados pelo pacote ROS (onde estão localizadas as diferentes versões do filtro de Kalman) e compará-lo com o referencial (graund truth). Para isso, exeute o comando *roslaunch husky_Kalmanan_fusion evaluate.launch*. A saída do comando deverá ser semelhante a:
+28 - No terminal Bravo iremos ativar a construção do mapa (launch) seguindo o script do Hector_Slam ou do Gmapping. Ele será responsável por realizar o mapeamento a partir dos dados informados pela Bag. Para isso, exeute o comando *roslaunch husky_part3_20260629 slam_gmapping_husky.launch*. A saída do comando deverá ser semelhante a:
 
     ros@docker-desktop:/ws$ roslaunch husky_Kalmanan_fusion evaluate.launch
     ... logging to /home/ros/.ros/log/83ab5690-7045-11f1-b278-525400123456/roslaunch-docker-desktop-512.log
@@ -284,7 +284,10 @@ Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. 
     process[evaluate_localization-1]: started with pid [526]    
     [INFO] [1782358272.596614]: Nó de avaliação iniciado. Aguardando dados...
 
-29 - Mantenha os terminais Alpha e Bravo ativos e abra o terminal Charle. Ele será responsavél pela execução do filtro de Kalman. Para isso, repita o processo do item 25 e em seguida execute um dos comandos abaixo:
+29 - Mantenha os terminais Alpha e Bravo ativos e abra o terminal Charle. Ele será responsável por rodar a Bag. Para isso, repita o processo do item 25 e em seguida execute o comando *rosbag play /ws/2026-06-16-00-36-58-001.bag --clock*. 
+
+
+Ele será responsavél pela execução da Bag. Para isso, repita o processo do item 25 e em seguida execute um dos comandos abaixo:
 
  * Para executar o filtro somente com odometria: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_only.launch*;
    
