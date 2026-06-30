@@ -378,7 +378,7 @@ Diante disso, para evitar manipulações, interpretações equivocadas e possibi
 
 As imagens obtidas e as métricas de desempenho podem ser melhor visualizadas na pasta husky_part3_gmapping contida nesse [repositório](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo).
 
-Por fim, segue a imagem do erro que persistiu durante diversas tentativas de confecção do Hecktor Slam.
+Por fim, segue a imagem do erro que persistiu durante diversas tentativas de confecção dos arquivos utilizando o algoritmo Hector Slam.
 
 ![Erro na Imagem](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo/blob/main/Screenshot%20from%202026-06-29%2022-49-00.png)
 
