@@ -202,7 +202,11 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
 ## Execução
 
-O processo de execução é composto por duas etapas. A primeira parte é responsavél por gerar os mapas de acordo com os algoritmos e consiste em três pilares principais:
+O processo de execução é composto por duas etapas. A primeira parte é responsavél por gerar os mapas de acordo com os algoritmos e consiste em três pilares principais. Com a segunda parte responsavél pela aplicação do AMCL e obtenção dos gráficos e das métricas.
+
+### Execução | Primeira Parte
+
+De forma macro, a primeira parte pode ser dividida em:
 
 A) Execução do arquivo launch correspondente para geração do mapa de acordo com algoritmo selecionado (ex: Hecktor_Slam ou Gmapping);
 
@@ -210,7 +214,7 @@ B) Execução da bag com os dados da simulação;
 
 C) Execução do script para salvar o mapa e os demais dados oriundos da execução do arquivo launch em conjunto com a bag. 
 
-Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de construção do mapa e a aplicação do filtro de Kalman estejam ativos. 
+Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de construção do mapa. Além disso, uma vez finalizada a execução da BAG, deve ser feita a execução do comando para salvar os mapas e demais informações oriundas do processamento finalizado. 
 
 Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. Portanto, recomendo utilizar o terminator e realize o processo a seguir:
 
