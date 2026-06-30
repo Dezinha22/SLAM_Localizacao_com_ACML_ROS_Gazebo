@@ -130,26 +130,26 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
     ros@docker-desktop:/ws$ pwd
     /ws
 
-18 - Após esse processo, utilize o comando *ls ~/Desktop/ | grep husky* para localizar a bag extraída desse repositório. Importante, você pode ajustar as atribuições contidas no comando para otimizar a busca. Assim como, a localização do arquivo também pode ser alcançando utilizando os comandos contidos no item 7 desse tutorial. O comando deve ser executado em outra aba do terminator, executado diretamente no ambiente local e a saida deve ser algo similiar a:
+18 - Após esse processo, utilize o comando *ls* para localizar, no dispositivo local (notebook, desktop, etc.) a bag extraída desse [repositório](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo). Importante, você pode ajustar as atribuições contidas no comando para otimizar a busca. Assim como, a localização do arquivo também pode ser obtida utilizando os comandos contidos no item 7 desse tutorial. O comando deve ser executado em outra aba do terminator, executado diretamente no ambiente local e a saida deve ser algo similiar a:
 
     (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~/lar_gazebo$ ls ~/Desktop/ | grep husky
     husky_Kalmanan_fusion
 
-19 - Nessa etapa você realizará a importação do pacote ROS para o container docker. Para isso, execute o comando docker cp *~/Desktop/husky_Kalmanan_fusion lar_gazebo_noetic:/ws/src/husky_Kalmanan_fusion* fora do ambiente do docker. A saida será similar a: 
+19 - Nessa etapa você realizará a importação do pacote ROS para o container docker. Para isso, execute o comando docker cp *~/local_do_arquivo_de_origem:/ws/src/local_de_destino* fora do ambiente do docker. A saida será similar a: 
 
     (base) matheus@matheus-VivoBook-ASUSLaptop-X512FBC-X512FBC:~/Desktop/Atividade_II_Localização_Robotica$ docker cp ~/Desktop/Atividade_II_Localização_Robotica/husky_Kalmanan_fusion_backup lar_gazebo_noetic:/ws/src/husky_Kalmanan_fusion
     Successfully copied 9.98kB (transferred 21kB) to lar_gazebo_noetic:/ws/src/husky_Kalmanan_fusion
 
-20 - Agora, verifique se o arquivo efetivamente foi transferido para o container docker em execução. Para isso, utilize o comando *cd*, *pwd*, dentre outros direcionados a localização e compartilhamento de endereço de pastas/arquivos. Por exemplo, temos o comando  *cd /ws/src/husky_Kalmanan_fusion* para acessar a bag nomeada husky_Kalmanan_fusion. A saida no terminal deve ser semelhante a:
+20 - Agora, verifique se o arquivo efetivamente foi transferido para o container docker em execução. Para isso, utilize o comando *cd*, *pwd*, dentre outros direcionados a localização e compartilhamento de endereço de pastas/arquivos. Por exemplo, temos o comando  *cd /ws/src/local_de_destino* para acessar o pacote ROS nomeado husky_part3_20260629. A saida no terminal deve ser semelhante a:
 
-    ros@docker-desktop:/ws/src/husky_Kalmanan_fusion$ 
+    ros@docker-desktop:/ws/src/husky_part3_20260629$ 
 
-21 - Nesse momento, verifique os arquivos contidos na pasta copiada para confirmar que a transferência foi realizada com sucesso. Para isso, utilize o *ls* para verificar os arquivos contidos dentro da bag. A estrtura deve ser parecida com:
+21 - Nesse momento, verifique os arquivos contidos na pasta copiada para confirmar que a transferência foi realizada com sucesso. Para isso, utilize o *ls* para verificar os arquivos contidos dentro da bag. A estrutura deve ser parecida com:
 
     ros@docker-desktop:/ws/src/husky_Kalmanan_fusion$ ls
     CMakeLists.txt  config  launch  package.xml  scripts
 
-22 - Agora, retorne a raiz do workspace e compile o pacote ROS. Para isso, utilize o comando *catkin build husky_Kalmanan_fusion* ou similar. A saída da execução desse comando será parecida com: 
+22 - Agora, retorne a raiz do workspace e compile o pacote ROS. Para isso, utilize o comando *catkin build nome_do_arquivo* ou similar. A saída da execução desse comando será parecida com: 
 
     ros@docker-desktop:/ws$ catkin build husky_Kalmanan_fusion
     --------------------------------------------
@@ -202,15 +202,15 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
 ## Execução
 
-O processo de execução é composto por três pilares principais:
+O processo de execução é composto por duas etapas. A primeira parte é responsavél por gerar os mapas de acordo com os algoritmos e consiste em três pilares principais:
 
 A) Execução do arquivo launch correspondente para geração do mapa de acordo com algoritmo selecionado (ex: Hecktor_Slam ou Gmapping);
 
 B) Execução da bag com os dados da simulação; 
 
-C) Salvar o mapa e os demais dados oriundos da execução do arquivo launch em conjunto com a bag. 
+C) Execução do script para salvar o mapa e os demais dados oriundos da execução do arquivo launch em conjunto com a bag. 
 
-Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de avaliação do filtro de Kalman e a aplicação do filtro de Kalman estejam ativos. 
+Para o processo em tela, é imprescindível que os dados sejam lidos quando o processo de construção do mapa e a aplicação do filtro de Kalman estejam ativos. 
 
 Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. Portanto, recomendo utilizar o terminator e realize o processo a seguir:
 
