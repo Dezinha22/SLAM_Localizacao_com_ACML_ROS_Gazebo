@@ -202,7 +202,7 @@ A base de dados principal é obtida a partir do input de dados provenientes do a
 
 ## Execução
 
-O processo de execução é composto por duas etapas. A primeira parte é responsavél por gerar os mapas de acordo com os algoritmos e consiste em três pilares principais. Com a segunda parte responsavél pela aplicação do AMCL e obtenção dos gráficos e das métricas.
+O processo de execução é composto por três etapas. A primeira parte é responsavél por gerar os mapas de acordo com os algoritmos e consiste em três pilares principais. Com a segunda parte responsavél pela aplicação do AMCL e obtenção dos gráficos e das métricas.
 
 ### Execução | Primeira Parte
 
@@ -260,42 +260,123 @@ Dessa forma, se faz necessário ter diversos terminais abertos simultaneamente. 
 
 28 - No terminal Bravo iremos ativar a construção do mapa (launch) seguindo o script do Hector_Slam ou do Gmapping. Ele será responsável por realizar o mapeamento a partir dos dados informados pela Bag. Para isso, exeute o comando *roslaunch husky_part3_20260629 slam_gmapping_husky.launch*. A saída do comando deverá ser semelhante a:
 
-    ros@docker-desktop:/ws$ roslaunch husky_Kalmanan_fusion evaluate.launch
-    ... logging to /home/ros/.ros/log/83ab5690-7045-11f1-b278-525400123456/roslaunch-docker-desktop-512.log
+       ros@docker-desktop:/ws$ roslaunch husky_part3_20260629 slam_gmapping_husky.launch
+    ... logging to /home/ros/.ros/log/a59ea058-741a-11f1-965d-525400123456/roslaunch-docker-desktop-4141.log
     Checking log directory for disk usage. This may take a while.
     Press Ctrl-C to interrupt
     Done checking log file disk usage. Usage is <1GB.
 
-    started roslaunch server http://docker-desktop:59439/
+    started roslaunch server http://docker-desktop:58611/
 
     SUMMARY
     ========
 
     PARAMETERS
      * /rosdistro: noetic
-     * /rosversion: 1.17.4
+    * /rosversion: 1.17.4
+     * /slam_gmapping/angularUpdate: 0.2
+     * /slam_gmapping/base_frame: base_link
+     * /slam_gmapping/delta: 0.05
+     * /slam_gmapping/linearUpdate: 0.3
+     * /slam_gmapping/map_frame: map
+     * /slam_gmapping/map_update_interval: 2.0
+     * /slam_gmapping/maxUrange: 15.0
+     * /slam_gmapping/minimumScore: 150
+     * /slam_gmapping/odom_frame: odom
+     * /slam_gmapping/particles: 100
+     * /slam_gmapping/xmax: 30
+     * /slam_gmapping/xmin: -30
+     * /slam_gmapping/ymax: 30
+     * /slam_gmapping/ymin: -30
 
     NODES
       /
-        evaluate_localization (husky_Kalmanan_fusion/evaluate_localization.py)
+    slam_gmapping (gmapping/slam_gmapping)
 
     ROS_MASTER_URI=http://localhost:11311
 
-    process[evaluate_localization-1]: started with pid [526]    
-    [INFO] [1782358272.596614]: Nó de avaliação iniciado. Aguardando dados...
+    process[slam_gmapping-1]: started with pid [4162]
+
 
 29 - Mantenha os terminais Alpha e Bravo ativos e abra o terminal Charle. Ele será responsável por rodar a Bag. Para isso, repita o processo do item 25 e em seguida execute o comando *rosbag play /ws/2026-06-16-00-36-58-001.bag --clock*. 
 
+30 - Quando finalizar a execução da Bag no terminal Charle, abra o terminal Echo e repita o processo do item 25. Após isso, execute o comando *rosrun map_server map_saver -f /ws/src/husky_part3_20260629/maps/mapa_gmapping* ou *rosrun map_server map_saver -f /ws/src/husky_part3_20260629/maps/hector_slam*. Ele será responsável por salvar os mapas gerados.
 
-Ele será responsavél pela execução da Bag. Para isso, repita o processo do item 25 e em seguida execute um dos comandos abaixo:
 
- * Para executar o filtro somente com odometria: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_only.launch*;
-   
- * Para executar o filtro com dados da odometria e IMU: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_imu.launch*;
-   
- * Para executar o filtro com dados da odometria, IMU e GPS: *roslaunch husky_Kalmanan_fusion husky_ekf_odom_imu_gps.launch*
+### Execução | Segunda Parte
 
-30 - Agora, continue com os terminais Alpha, Bravo e Charle ativos e abra o terminal Delta. Ele será responsável por rodar a Bag. Para isso, repita o processo do item 25 e em seguida execute o comando *rosbag play /ws/2026-06-16-00-36-58-001.bag --clock*. 
+A segunda parte será responsável pela análise de qualidade do mapa com os parâmetros de AMCL. Para isso, siga as seguintes etapas. 
 
-31 - Após finalizar a execução da bag, aguarde ao menos um minuto e encerre o processo no terminal Bravo. Depois, execute o comando similar a *docker cp lar_gazebo_noetic:/home/ros/.ros/results/20260625_035150 ~/Desktop/resultados_odom_only* em um outro terminal que chamaremos de terminal Echo. O terminal Echo será responsável por transferir os arquivos gerados pelo avalidor (20260625_035150) para o desktop da maquina local. Quanto aos testes subsequentes, só é necessário modificar o nome da pasta que gostaria de nomear e ajustar o nome da pasta de origem dos dados, com objetivo de selecionar os arquivos corretos (ex: modificar 20260625_035150 pelo endereço atualizado gerado no terminal Bravo).
+31 - Mantenha o terminal Alpha ativo. 
+
+32 - No terminal Bravo execute o launch do AMCL com o comando *roslaunch husky_part3_20260629 amcl_gmapping.launch*. A saida deve ser similar a:
+
+33 - No terminal Echo grave a comparação realizada pelo launch da AMCL. Nesse caso, utilize o comando: 
+
+rosbag record -O /ws/src/husky_part3_20260629/bags/amcl_gmapping_comparison.bag \
+/amcl_pose \
+/gazebo_ground_truth/odom \
+/tf \
+/tf_static
+
+A saída deve ser similar a:
+
+
+34 - No terminal Charle, execute a Bag pelo comando *rosbag play /ws/2026-06-16-00-36-58-001.bag --clock*. 
+
+35 - Quando finalizar a execução da Bag, finalize a gravação no terminal Echo (utilize o comando crtl + C) e utilize o comando *ls -lh /ws/src/husky_part3_20260629/bags/amcl_gmapping_comparison.bag*
+para verficar se foi efetivamente gravada. A saída deve ser semelhante a essa:
+
+ros@docker-desktop:/ws$ ls -lh /ws/src/husky_part3_20260629/bags/amcl_gmapping_comparison.bag
+-rw-r--r-- 1 ros ros 5.8M Jun 30 01:21 /ws/src/husky_part3_20260629/bags/amcl_gmapping_comparison.bag
+
+36 - Após essa etapa, execute - no terminal Echo - o script em python que será responsável por gerar o mapa e a trajetória do AMCL. O comando necessário para isso é o *python3 /ws/src/husky_part3_20260629/scripts/plot_gmapping_trajectory.py*. A saida deve ser semelhante a: 
+
+    ros@docker-desktop:/ws$ python3 /ws/src/husky_part3_20260629/scripts/plot_gmapping_trajectory.py
+    === Gerando visualização profissional - Gmapping ===
+
+    Carregando mapa...
+    Extraindo trajetória...
+    Gerando figura de alta qualidade...
+    Figura salva em: /ws/src/husky_part3_20260629/figures/gmapping/mapa_gmapping_trajetoria_20260630_012806.png
+
+    Concluído com sucesso!
+
+### Execução | Terceira Parte
+
+Nessa etapa, iremos extrair as métricas do script.
+
+37 - Agora, no terminal Echo, execute o comando *python3 /ws/src/husky_part3_20260629/scripts/analise_gmapping_estabilidade.py* para extrair as métricas. A saída deve ser semelhante a:
+
+    ros@docker-desktop:/ws$ python3 /ws/src/husky_part3_20260629/scripts/analise_gmapping_estabilidade.py
+    === Análise com Métricas de Estabilidade - Gmapping ===
+
+    AMCL: 103 | GT: 2540
+    Sincronizados: 103
+
+    Análise concluída!
+    Resultados salvos em: /ws/src/husky_part3_20260629/analysis/gmapping/20260630_014102
+
+
+## Conclusão
+
+As métricas de estabilidade revelaram que os dados analisados possuem muita instabilidade. Isso fica ainda mais evidente ao verificarmos que a média dos "saltos" entre as poses é de 0.1682 m e observarmos que a máxima dos saltos é de 0.2538 m. Essa informação é ainda mais agravante quando recordamos do fato de estarmos analisando o grupo de 103 poses dentro do universo de 2540 poses de ground_truth, 5080 de front/scan e 5080 de odometria.
+
+Essa disparidade pode ter sua causa justamente nos inúmeros Timestamp de qualidade inadequada para a simmulação. Isso resultou em sincronismo deficiente, afetou diretamente o Transform Frames - TF e é um dos principais responsáveis pelo feedback de insucesso diante das tentativas em utilizar o Hector Slam (. Justificando, por sua vez, o relativo sucesso em alcançar representações com o script Gmapping demonstrando maior robustez para este conjunto de dados.
+
+Em relação ao erro final de posição ser da ordem de 3.5496 m e do RMSE Yaw ser de 2.7538 rad, temos que considerar que a bag foi obtida sem sincronismo inicial ao que é considerado o ponto de referência inical do Husky dentro do mundo simulado no Gazebo. Além disso, não houve uma bag com a execução da simulação respeitando a referência, portanto, não houve como validar essa argumentação. Sendo permanecida como uma hipótese. 
+
+Além disso, o Husky apresentou saltos, escorregamentos e demais variações durante o regime de funcionamento no ato da gravação da bag. Esses comportamentos não somente impactam na leitura dos sensores, como também tornam os dados e as métricas oriundas dos sensores interoceptivos simplesmente infrutiferas. Esse fato foi verificado principalmente quando se foi realizado as atividades de fusão sensorial contida nesse [link](https://github.com/Dezinha22/Fus-o_Sensorial-Filtro_Kalman_ROS). Onde, a aplicação do filtro de Kalman com o uso da odometria + IMU + GPS apresentou o resultado mais satisfatório.
+
+Sobre o mapa gerado, temos uma imagem com paredes bem destacadas, poucos obstáculos falsos e algumas regiões onde existe falhas na representação das paredes. Além, de alguns objetos que não foram identificados. Esse comportamneto pode possuir como uma das causas justamente a questão do uso do sensor LiDAR 2D que possui limitações decorrentes da natureza do seu funcionamneto (varredura) aliado com os próprios desafios presentes no mapeamento de ambientes com sensores LiDAR (inclusive, decorrentes da opacidade de elementos presentes no ambiente a ser mapeado. Assim como, por se utilizar da estratégia do filtro de particulas com odometria + sensor LiDAR, é previsivél que existam falsos positivos e falsos negativos decorrentes da própria natureza probabilistica do modelo.
+
+Em relação a trajetória, o caminho percorrido ficou muito bem representado. Conseguindo reparar oscilações presentes no Ground Truth. A AMCL em conjunto com o script do Gmapping fez um ótimo trabalho nessa questão. Sendo a questão relacionada ao erro de posição mais uma vez elucidando as instabilidades da medição. Com a aparente estabilidade inicial podendo ser resultado tão somente da incapacidade de conseguir representar as poses iniciais. Com a própria oscilação vertiginosa presente aos aproximadamente 25 sendo um forte indicio.
+
+Não suficiente, as próprias limitações computacionais e os diversos erros/bugs também possuem forte possibilidade de impacto nos resultados. Afinal, essas métricas e essas leituras foram feitas em um dispositivo eletrônico, com as váriaveis que estamos considerando como distância, tempo e representação gráfica sendo literalmente sinais elétricos que foram tradados e processados. Com potencial de afetar diretamente na interpretação. 
+
+Diante disso, para evitar manipulações, interpretações equivocadas e possibilitar conclusões mais técnicas sobre o motivo desses erros, dessas instabilidades e dos insucessos relatods. Se faz imperativo realizar novos testes em toda a etapa do ciclo de vida das atividades. Da coleta de dados no Gazebo até a emissão das métricas de qualidade. Aplicando etapas de verificação e validação em cada subprocesso. Com intuito de efetivamente ter conclusões concretas e auditavéis. 
+
+As imagens obtidas e as métricas de desempenho podem ser melhor visualizadas na pasta husky_part3_gmapping contida nesse [repositório](https://github.com/Dezinha22/SLAM_Localizacao_com_ACML_ROS_Gazebo).
+
+
 
